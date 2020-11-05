@@ -27,7 +27,6 @@ public final class Server {
         server.register(this.selector, SelectionKey.OP_ACCEPT);
         server.bind(new InetSocketAddress(port));
         LOGGER.info("Server started successfully");
-        new Parser().parse("abc");
     }
 
     public void start() throws IOException {
