@@ -1,5 +1,7 @@
 package com.petdb.parser.tokenizer;
 
+import com.petdb.parser.query.Keyword;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,9 +12,16 @@ public class Tokenizer {
     private static final List<Info> INFOS = new ArrayList<>();
 
     static {
+        var builder = new StringBuilder();
+        for (Keyword keyword : Keyword.values()) {
+            builder.append("|");
+            builder.append(keyword);
+        }
+        builder.deleteCharAt(0);
+
         Tokenizer.INFOS.add(new Info(
-                new Pattern[]{Pattern.compile("(?i)^(BEGIN|ROLLBACK|COMMIT|END|SET|GET|DELETE|COUNT|EVICT|CLEAR)\\z"),
-                        Pattern.compile("(?i)^(BEGIN|ROLLBACK|COMMIT|END|SET|GET|DELETE|COUNT|EVICT|CLEAR)\\s")},
+                new Pattern[]{Pattern.compile("(?i)^(" + builder.toString() + ")\\z"),
+                        Pattern.compile("(?i)^(" + builder.toString() + ")\\s")},
                 Token.KEYWORD
         ));
 
