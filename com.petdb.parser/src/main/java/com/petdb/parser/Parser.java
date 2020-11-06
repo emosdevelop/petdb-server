@@ -15,13 +15,11 @@ import static com.petdb.parser.query.Keyword.valueOf;
 
 public final class Parser {
 
-    private final Tokenizer tokenizer = new Tokenizer();
-
     public Optional<Query> parse(String string) {
         if (string == null || string.isEmpty() || string.isBlank()) {
             return Optional.empty();
         }
-        var tokens = this.tokenizer.tokenize(string);
+        var tokens = Tokenizer.tokenize(string);
         if (tokens.isEmpty()) {
             return Optional.empty();
         }

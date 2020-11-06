@@ -27,7 +27,7 @@ public class Tokenizer {
         ));
     }
 
-    public List<Token> tokenize(String string) {
+    public static List<Token> tokenize(String string) {
         var tokens = new ArrayList<Token>();
         while (!string.isEmpty()) {
             boolean matchFirstIteration = false;
