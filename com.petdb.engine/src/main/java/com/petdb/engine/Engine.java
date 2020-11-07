@@ -45,7 +45,7 @@ public final class Engine {
                 return String.format("COUNT: Cache = %d -> Disk = %d -> Total: %d", cacheSize, onDiskSize, total);
             case EVICT:
                 if (this.transactionHandler.isActive()) return "Pending transaction[s]";
-                return persistence.persist(this.cache.getStore(), bufferCapacity);
+                return persistence.persist(this.cache.getStore());
             case CLEAR:
                 if (this.transactionHandler.isActive()) return "Pending transaction[s]";
                 long start = System.nanoTime();
