@@ -14,7 +14,7 @@ public final class Engine {
     private final Cache cache = new Cache();
     private final Persistence persistence = new Persistence();
 
-    public String execute(Query query) {
+    public String execute(Query query, int bufferCapacity) {
         switch (query.getKeyword()) {
             case BEGIN:
                 return this.transactionHandler.begin();
@@ -45,7 +45,7 @@ public final class Engine {
                 return String.format("COUNT: Cache = %d -> Disk = %d -> Total: %d", cacheSize, onDiskSize, total);
             case EVICT:
                 if (this.transactionHandler.isActive()) return "Pending transaction[s]";
-                return persistence.persist(this.cache.getStore());
+                return persistence.persist(this.cache.getStore(), bufferCapacity);
             case CLEAR:
                 if (this.transactionHandler.isActive()) return "Pending transaction[s]";
                 long start = System.nanoTime();

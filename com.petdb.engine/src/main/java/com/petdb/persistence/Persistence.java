@@ -4,10 +4,14 @@ import com.petdb.parser.query.Key;
 import com.petdb.parser.query.Value;
 
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public final class Persistence {
 
-    public String persist(Map<Key, Value> cache) {
+    private final static ExecutorService THREAD_POOL = Executors.newCachedThreadPool();
+
+    public String persist(Map<Key, Value> cache, int bufferCapacity) {
         return null;
     }
 
