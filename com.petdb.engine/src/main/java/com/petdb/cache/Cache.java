@@ -10,19 +10,19 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class Cache {
 
-    private final ConcurrentHashMap<Key, Value> store = new ConcurrentHashMap<>();
+    private final static ConcurrentHashMap<Key, Value> store = new ConcurrentHashMap<>();
 
     public Cache() {
         //TODO load from disk
     }
 
     public String set(Key key, Value value) {
-        this.store.put(key, value);
+        Cache.store.put(key, value);
         return "OK";
     }
 
     public String get(Key key) {
-        var value = this.store.get(key);
+        var value = Cache.store.get(key);
         if (value == null) {
             return "Key not set";
         }
@@ -30,24 +30,24 @@ public final class Cache {
     }
 
     public String delete(Key key) {
-        this.store.remove(key);
+        Cache.store.remove(key);
         return "DELETED";
     }
 
     public String commit(Transaction transaction) {
-        this.store.putAll(transaction.getMap());
+        Cache.store.putAll(transaction.getMap());
         return String.format("COMMIT: %s", transaction.getUuid());
     }
 
     public int count() {
-        return this.store.size();
+        return Cache.store.size();
     }
 
     public Map<Key, Value> getStore() {
-        return Collections.unmodifiableMap(this.store);
+        return Collections.unmodifiableMap(Cache.store);
     }
 
     public void clear() {
-        this.store.clear();
+        Cache.store.clear();
     }
 }

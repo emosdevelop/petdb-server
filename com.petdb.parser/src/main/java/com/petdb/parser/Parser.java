@@ -62,7 +62,7 @@ public final class Parser {
                 return query.hasKey() && query.hasValue();
             case DELETE:
             case GET:
-                return !query.hasValue();
+                return query.hasKey() && !query.hasValue();
             default:
                 return false;
         }
