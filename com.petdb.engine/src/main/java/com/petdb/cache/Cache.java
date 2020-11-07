@@ -4,19 +4,21 @@ import com.petdb.parser.query.Key;
 import com.petdb.parser.query.Value;
 import com.petdb.transaction.Transaction;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class Cache {
 
-    private final ConcurrentHashMap<Key, Value> cache = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Key, Value> store = new ConcurrentHashMap<>();
 
     public String set(Key key, Value value) {
-        this.cache.put(key, value);
+        this.store.put(key, value);
         return "OK";
     }
 
     public String get(Key key) {
-        var value = this.cache.get(key);
+        var value = this.store.get(key);
         if (value == null) {
             return "Key not set";
         }
@@ -24,16 +26,20 @@ public final class Cache {
     }
 
     public String delete(Key key) {
-        this.cache.remove(key);
+        this.store.remove(key);
         return "DELETED";
     }
 
     public String commit(Transaction transaction) {
-        this.cache.putAll(transaction.getMap());
+        this.store.putAll(transaction.getMap());
         return String.format("COMMIT: %s", transaction.getUuid());
     }
 
     public String count() {
-        return String.valueOf(this.cache.size());
+        return String.valueOf(this.store.size());
+    }
+
+    public Map<Key, Value> getStore() {
+        return Collections.unmodifiableMap(this.store);
     }
 }

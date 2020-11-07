@@ -3,12 +3,14 @@ package com.petdb.engine;
 
 import com.petdb.cache.Cache;
 import com.petdb.parser.query.Query;
+import com.petdb.persistence.Persistence;
 import com.petdb.transaction.TransactionHandler;
 
 public final class Engine {
 
     private final TransactionHandler transactionHandler = new TransactionHandler();
     private final Cache cache = new Cache();
+    private final Persistence persistence = new Persistence();
 
     public String execute(Query query) {
         switch (query.getKeyword()) {
@@ -38,9 +40,9 @@ public final class Engine {
                         this.transactionHandler.count() :
                         this.cache.count();
             case EVICT:
-                //TODO evict cache to filesystem
+                return persistence.persist(this.cache.getStore());
             case CLEAR:
-                //TODO clear the cache and remove from filesystem
+
         }
         return "null";
     }
