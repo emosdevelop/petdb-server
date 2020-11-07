@@ -24,7 +24,7 @@ public final class Cache {
     public String get(Key key) {
         var value = Cache.store.get(key);
         if (value == null) {
-            return "Key not set";
+            return String.format("Key = %s, not set", key.getData());
         }
         return value.getData();
     }

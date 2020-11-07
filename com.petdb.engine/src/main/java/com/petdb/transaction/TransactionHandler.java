@@ -59,7 +59,7 @@ public class TransactionHandler {
         var map = this.getMapFromActiveTransaction();
         var value = map.get(key);
         if (value == null) {
-            return "Key not set";
+            return String.format("Key = %s, not set", key.getData());
         }
         return value.getData();
     }
