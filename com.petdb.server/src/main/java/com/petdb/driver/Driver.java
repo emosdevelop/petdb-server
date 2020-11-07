@@ -14,7 +14,7 @@ public final class Driver {
             int port = 0;
             int bufferCapacity = 0;
             if (args.length != 2) {
-                port = 12574;
+                port = 12542;
                 bufferCapacity = 1024;
                 LOGGER.info("Default server start up");
             } else {
