@@ -49,8 +49,7 @@ public class TransactionHandler {
     }
 
     public String set(Key key, Value value) {
-        var transaction = this.stack.peek();
-        var map = transaction.getMap();
+        var map = this.getMapFromActiveTransaction();
         map.put(key, value);
         return "OK";
     }
