@@ -3,6 +3,7 @@ package com.petdb.persistence;
 import com.petdb.parser.query.Key;
 import com.petdb.parser.query.Value;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
@@ -19,8 +20,16 @@ import static java.nio.file.StandardOpenOption.WRITE;
 
 public final class Persistence {
 
-    private final Path BASE_PATH = Path.of("/data");
+    private final static Path BASE_PATH = Path.of(System.getProperty("user.dir")).resolve("data");
     private final static ExecutorService THREAD_POOL = Executors.newCachedThreadPool();
+
+    public Persistence() {
+        try {
+            Files.createDirectories(BASE_PATH);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public String persist(Map<Key, Value> cache) {
         long start = System.nanoTime();
@@ -36,7 +45,7 @@ public final class Persistence {
         long end = System.nanoTime();
         long elapsedTime = end - start;
         long seconds = TimeUnit.SECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
-        return String.format("EVICT: It took %d to write %d key[s] and value[s]", seconds, cache.size());
+        return String.format("EVICT: It took %dSECONDS to write %d key[s] and value[s]", seconds, cache.size());
     }
 
     private void write(Path file, Value value) throws IOException {
