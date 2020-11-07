@@ -12,6 +12,10 @@ public final class Cache {
 
     private final ConcurrentHashMap<Key, Value> store = new ConcurrentHashMap<>();
 
+    public Cache() {
+        //TODO load from disk
+    }
+
     public String set(Key key, Value value) {
         this.store.put(key, value);
         return "OK";
