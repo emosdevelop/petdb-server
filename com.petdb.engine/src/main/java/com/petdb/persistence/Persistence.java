@@ -3,7 +3,6 @@ package com.petdb.persistence;
 import com.petdb.parser.query.Key;
 import com.petdb.parser.query.Value;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
@@ -67,8 +66,15 @@ public final class Persistence {
         return Files.notExists(filePath) ? Files.createFile(filePath) : filePath;
     }
 
-    public int count() {
-        return 0;
+    public long count() {
+        long count = 0L;
+        try (var stream = Files.find(BASE_PATH, 1, (path, basicFileAttributes) ->
+                basicFileAttributes.isDirectory() && !path.equals(BASE_PATH))) {
+            count = stream.count();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return count;
     }
 
     public void clear() {

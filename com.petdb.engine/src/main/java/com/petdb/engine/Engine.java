@@ -40,7 +40,7 @@ public final class Engine {
             case COUNT:
                 if (this.transactionHandler.isActive()) return "Pending transaction[s]";
                 int cacheSize = this.cache.count();
-                int onDiskSize = this.persistence.count();
+                int onDiskSize = (int) this.persistence.count();
                 int total = cacheSize + onDiskSize;
                 return String.format("COUNT: Cache = %d -> Disk = %d -> Total: %d", cacheSize, onDiskSize, total);
             case EVICT:
