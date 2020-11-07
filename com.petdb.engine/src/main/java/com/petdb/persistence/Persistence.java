@@ -19,7 +19,7 @@ import static java.nio.file.StandardOpenOption.WRITE;
 
 public final class Persistence {
 
-    private final Path BASE_PATH = Path.of(this.getClass().getResource("/data").getPath());
+    private final Path BASE_PATH = Path.of("/data");
     private final static ExecutorService THREAD_POOL = Executors.newCachedThreadPool();
 
     public String persist(Map<Key, Value> cache) {

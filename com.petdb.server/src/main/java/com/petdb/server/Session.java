@@ -29,8 +29,7 @@ public final class Session {
         int bytesRead = this.channel.read(buffer);
         buffer.clear();
         if (bytesRead == END_OF_STREAM) {
-            System.out.println("END OF STREAM");
-            return;
+            throw new IOException();
         }
         String request = StandardCharsets.UTF_8.decode(buffer).toString();
         Optional<Query> query = this.parser.parse(request);

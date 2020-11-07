@@ -71,7 +71,7 @@ public class TransactionHandler {
     }
 
     public boolean isActive() {
-        return this.stack.isEmpty();
+        return !this.stack.isEmpty();
     }
 
     private Optional<Transaction> peekOptional() {
