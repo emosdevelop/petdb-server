@@ -78,6 +78,17 @@ public final class Persistence {
     }
 
     public void clear() {
-
+        try (var stream = Files.find(BASE_PATH, 1, (path, basicFileAttributes) ->
+                basicFileAttributes.isDirectory() && !path.equals(BASE_PATH))) {
+            stream.forEach(path -> {
+                try {
+                    Files.delete(path);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
