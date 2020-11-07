@@ -20,8 +20,8 @@ public class Tokenizer {
         builder.deleteCharAt(0);
 
         Tokenizer.INFOS.add(new Info(
-                new Pattern[]{Pattern.compile("(?i)^(" + builder.toString() + ")\\z"),
-                        Pattern.compile("(?i)^(" + builder.toString() + ")\\s")},
+                new Pattern[]{Pattern.compile("(?i)^("+ builder.toString() +")\\z"),
+                        Pattern.compile("(?i)^("+ builder.toString() +")\\s")},
                 Token.KEYWORD
         ));
 

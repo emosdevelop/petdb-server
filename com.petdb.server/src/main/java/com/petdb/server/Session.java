@@ -6,6 +6,7 @@ import com.petdb.parser.query.Query;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
@@ -31,17 +32,17 @@ public final class Session {
         if (bytesRead == END_OF_STREAM) {
             throw new IOException();
         }
-        String request = StandardCharsets.UTF_8.decode(buffer).toString();
+        String request = new String(buffer.array()).trim();
         Optional<Query> query = this.parser.parse(request);
         String response = query.map(q -> this.engine.execute(q, bufferCapacity))
                 .orElseGet(() -> String.format("Error: input -> \"%s\" is not a valid syntax", request));
-        this.channel.register(this.key.selector(), SelectionKey.OP_WRITE, ByteBuffer.wrap(response.getBytes()));
+        this.channel.register(this.key.selector(), SelectionKey.OP_WRITE, CharBuffer.wrap(response.toCharArray()));
     }
 
     public void write() throws IOException {
-        var buffer = (ByteBuffer) this.key.attachment();
+        var buffer = (CharBuffer) this.key.attachment();
         while (buffer.hasRemaining()) {
-            this.channel.write(buffer);
+            this.channel.write(StandardCharsets.UTF_8.encode(buffer));
         }
         this.key.interestOps(SelectionKey.OP_READ);
     }

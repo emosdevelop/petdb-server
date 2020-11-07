@@ -1,7 +1,5 @@
 package com.petdb.server;
 
-import com.petdb.parser.Parser;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
