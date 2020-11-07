@@ -35,11 +35,15 @@ public final class Cache {
         return String.format("COMMIT: %s", transaction.getUuid());
     }
 
-    public String count() {
-        return String.valueOf(this.store.size());
+    public int count() {
+        return this.store.size();
     }
 
     public Map<Key, Value> getStore() {
         return Collections.unmodifiableMap(this.store);
+    }
+
+    public void clear() {
+        this.store.clear();
     }
 }

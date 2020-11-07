@@ -6,6 +6,8 @@ import com.petdb.parser.query.Query;
 import com.petdb.persistence.Persistence;
 import com.petdb.transaction.TransactionHandler;
 
+import java.util.concurrent.TimeUnit;
+
 public final class Engine {
 
     private final TransactionHandler transactionHandler = new TransactionHandler();
@@ -36,14 +38,26 @@ public final class Engine {
                         this.transactionHandler.delete(query.getKey()) :
                         this.cache.delete(query.getKey());
             case COUNT:
-                return this.transactionHandler.isActive() ?
-                        this.transactionHandler.count() :
-                        this.cache.count();
+                if (this.transactionHandler.isActive()) return "Pending transaction[s]";
+                int cacheSize = this.cache.count();
+                int onDiskSize = this.persistence.count();
+                int total = cacheSize + onDiskSize;
+                return String.format("COUNT: Cache = %d -> Disk = %d -> Total: %d", cacheSize, onDiskSize, total);
             case EVICT:
+                if (this.transactionHandler.isActive()) return "Pending transaction[s]";
                 return persistence.persist(this.cache.getStore());
             case CLEAR:
+                if (this.transactionHandler.isActive()) return "Pending transaction[s]";
+                long start = System.nanoTime();
+                this.cache.clear();
+                this.persistence.clear();
+                long end = System.nanoTime();
+                long elapsedTime = end - start;
+                long seconds = TimeUnit.SECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
+                return String.format("CLEAR: It took %d seconds", seconds);
+            default:
+                return "null";
 
         }
-        return "null";
     }
 }

@@ -11,4 +11,11 @@ public final class Persistence {
         return null;
     }
 
+    public int count() {
+        return 0;
+    }
+
+    public void clear() {
+
+    }
 }
