@@ -79,7 +79,7 @@ public final class Persistence {
 
     public void clear() {
         try (var stream = Files.find(BASE_PATH, 2, (path, basicFileAttributes) ->
-                basicFileAttributes.isDirectory() && !path.equals(BASE_PATH))) {
+                basicFileAttributes.isDirectory() || basicFileAttributes.isRegularFile() && !path.equals(BASE_PATH))) {
             stream.forEach(path -> {
                 try {
                     Files.delete(path);
