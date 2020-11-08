@@ -62,14 +62,7 @@ public final class Server {
         try {
             session.read(this.bufferCapacity);
         } catch (IOException e) {
-            try {
-                key.channel().close();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            } finally {
-                key.cancel();
-                Server.CLIENT_SESSIONS.remove(key, session);
-            }
+            this.closeSession(key, session);
         }
     }
 
@@ -78,14 +71,18 @@ public final class Server {
         try {
             session.write();
         } catch (IOException e) {
-            try {
-                key.channel().close();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            } finally {
-                key.cancel();
-                Server.CLIENT_SESSIONS.remove(key, session);
-            }
+            this.closeSession(key, session);
+        }
+    }
+
+    private void closeSession(SelectionKey key, Session session) {
+        try {
+            key.channel().close();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        } finally {
+            key.cancel();
+            Server.CLIENT_SESSIONS.remove(key, session);
         }
     }
 }
