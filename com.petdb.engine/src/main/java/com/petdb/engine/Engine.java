@@ -38,7 +38,9 @@ public final class Engine {
                         this.transactionHandler.delete(query.getKey()) :
                         this.cache.delete(query.getKey());
             case COUNT:
-                if (this.transactionHandler.isActive()) return "Pending transaction[s]";
+                if (this.transactionHandler.isActive()) {
+                    return String.format("COUNT: Transaction = %s", this.transactionHandler.count());
+                }
                 int cacheSize = this.cache.count();
                 int onDiskSize = (int) this.persistence.count();
                 int total = cacheSize + onDiskSize;

@@ -78,15 +78,11 @@ public class TransactionHandler {
     }
 
     private Map<Key, Value> getMapFromActiveTransaction() {
-        return this.stack.peek().getMap();
+        return isActive() ? this.stack.peek().getMap() : null;
     }
 
     public String count() {
-        var count = this.stack.stream()
-                .map(Transaction::getMap)
-                .map(Map::size)
-                .mapToInt(Integer::intValue)
-                .sum();
+        var count = this.getMapFromActiveTransaction().size();
         return String.valueOf(count);
     }
 }
