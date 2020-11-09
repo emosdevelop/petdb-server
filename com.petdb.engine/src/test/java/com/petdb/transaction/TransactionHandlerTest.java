@@ -40,6 +40,7 @@ class TransactionHandlerTest {
         assertEquals(0, Integer.parseInt(transactionHandler.count()));
         transactionHandler.end();
         assertEquals(2, Integer.parseInt(transactionHandler.count()));
+        transactionHandler.end();
     }
 
 }
