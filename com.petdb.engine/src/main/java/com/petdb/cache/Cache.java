@@ -5,12 +5,12 @@ import com.petdb.parser.query.Value;
 import com.petdb.transaction.Transaction;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public final class Cache {
 
-    private final static ConcurrentHashMap<Key, Value> STORE = new ConcurrentHashMap<>();
+    private final static Map<Key, Value> STORE = new HashMap<>();
 
     public Cache() {
         //TODO load from disk
