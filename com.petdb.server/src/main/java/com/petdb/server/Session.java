@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 public final class Session {
@@ -34,7 +35,10 @@ public final class Session {
         Optional<Query> query = this.parser.parse(request);
         String response = query.map(q -> this.engine.execute(q, bufferCapacity))
                 .orElseGet(() -> String.format("Error: input -> \"%s\" is not a valid syntax", request));
-        this.channel.register(this.key.selector(), SelectionKey.OP_WRITE, ByteBuffer.wrap(response.getBytes()));
+        this.channel.register(
+                this.key.selector(),
+                SelectionKey.OP_WRITE,
+                ByteBuffer.wrap(response.getBytes(StandardCharsets.UTF_8)));
     }
 
     public void write() throws IOException {
