@@ -11,8 +11,9 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 
 public final class Server {
+
     private final static Logger LOGGER = Logger.getLogger(Server.class.getName());
-    public static final Map<SelectionKey, Session> CLIENT_SESSIONS = new HashMap<>();
+    public final static Map<SelectionKey, Session> CLIENT_SESSIONS = new HashMap<>();
 
     private final Selector selector;
     private final int bufferCapacity;
