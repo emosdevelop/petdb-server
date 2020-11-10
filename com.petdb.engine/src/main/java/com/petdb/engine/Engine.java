@@ -59,7 +59,6 @@ public final class Engine {
                 return String.format("CLEAR: It took %dSECONDS", seconds);
             default:
                 return "null";
-
         }
     }
 }
