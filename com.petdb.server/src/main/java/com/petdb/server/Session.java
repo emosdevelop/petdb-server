@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 public final class Session {
+
     private final static int END_OF_STREAM = -1;
 
     private final SelectionKey key;
