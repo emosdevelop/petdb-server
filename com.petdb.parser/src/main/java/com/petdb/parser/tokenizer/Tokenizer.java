@@ -34,6 +34,8 @@ public class Tokenizer {
                 new Pattern[]{Pattern.compile("^(.*)")},
                 Token.VALUE
         ));
+
+        //TODO params?
     }
 
     public static List<Token> tokenize(String string) {
