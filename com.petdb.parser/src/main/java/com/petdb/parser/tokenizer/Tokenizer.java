@@ -20,8 +20,8 @@ public class Tokenizer {
         builder.deleteCharAt(0);
 
         Tokenizer.INFOS.add(new Info(
-                new Pattern[]{Pattern.compile("(?i)^("+ builder.toString() +")\\z"),
-                        Pattern.compile("(?i)^("+ builder.toString() +")\\s")},
+                new Pattern[]{Pattern.compile("(?i)^(" + builder.toString() + ")\\z"),
+                        Pattern.compile("(?i)^(" + builder.toString() + ")\\s")},
                 Token.KEYWORD
         ));
 
@@ -39,19 +39,19 @@ public class Tokenizer {
     public static List<Token> tokenize(String string) {
         var tokens = new ArrayList<Token>();
         while (!string.isEmpty()) {
-            boolean matchFirstIteration = false;
+            boolean matchKeyword = false;
             for (Info info : Tokenizer.INFOS) {
                 for (Pattern pattern : info.patterns) {
                     var matcher = pattern.matcher(string);
                     if (matcher.find()) {
-                        matchFirstIteration = true;
+                        matchKeyword = true;
                         String sequence = matcher.group().trim();
                         tokens.add(new Token(info.identifier, sequence));
                         string = matcher.replaceFirst("").trim();
                         break;
                     }
                 }
-                if (!matchFirstIteration) return Collections.emptyList();
+                if (!matchKeyword) return Collections.emptyList();
             }
         }
         return tokens;
