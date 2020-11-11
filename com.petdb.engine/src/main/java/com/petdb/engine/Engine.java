@@ -51,8 +51,8 @@ public final class Engine {
             case FLUSH:
                 if (this.transactionHandler.isActive()) return "Pending transaction[s]";
                 long start = System.nanoTime();
-                this.cache.clear();
-                this.persistence.clear();
+                this.cache.flush();
+                this.persistence.flush();
                 long end = System.nanoTime();
                 long elapsedTime = end - start;
                 long seconds = TimeUnit.SECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);

@@ -77,7 +77,7 @@ public final class Persistence {
         return count;
     }
 
-    public void clear() {
+    public void flush() {
         try (var stream = Files.find(BASE_PATH, 1, (path, basicFileAttributes) ->
                 basicFileAttributes.isDirectory() && !path.equals(BASE_PATH))) {
             stream.forEach(path -> {

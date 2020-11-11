@@ -47,7 +47,7 @@ public final class Cache {
         return Collections.unmodifiableMap(Cache.STORE);
     }
 
-    public void clear() {
+    public void flush() {
         Cache.STORE.clear();
     }
 }
