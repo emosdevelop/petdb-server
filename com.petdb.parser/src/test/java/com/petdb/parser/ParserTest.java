@@ -19,7 +19,7 @@ class ParserTest {
             "delete mykey",
             "count",
             "evict",
-            "CleaR",
+            "fluSh",
     };
 
     private final String[] shouldBeInValid = {
