@@ -56,7 +56,7 @@ public final class Engine {
                 long end = System.nanoTime();
                 long elapsedTime = end - start;
                 long seconds = TimeUnit.SECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
-                return String.format("CLEAR: It took %dSECONDS", seconds);
+                return String.format("FLUSH: It took %dSECONDS", seconds);
             default:
                 return "null";
         }
