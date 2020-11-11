@@ -10,5 +10,5 @@ public enum Keyword {
     DELETE,
     COUNT,
     EVICT,
-    CLEAR;
+    FLUSH;
 }

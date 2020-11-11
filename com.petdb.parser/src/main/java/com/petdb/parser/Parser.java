@@ -52,7 +52,7 @@ public final class Parser {
         switch (query.getKeyword()) {
             case COUNT:
             case EVICT:
-            case CLEAR:
+            case FLUSH:
             case BEGIN:
             case ROLLBACK:
             case COMMIT:

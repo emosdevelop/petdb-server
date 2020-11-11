@@ -48,7 +48,7 @@ public final class Engine {
             case EVICT:
                 if (this.transactionHandler.isActive()) return "Pending transaction[s]";
                 return persistence.persist(this.cache.getStore());
-            case CLEAR:
+            case FLUSH:
                 if (this.transactionHandler.isActive()) return "Pending transaction[s]";
                 long start = System.nanoTime();
                 this.cache.clear();
