@@ -2,7 +2,6 @@ package com.petdb.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -14,9 +13,7 @@ import java.util.logging.Logger;
 public final class Server {
 
     private final static Logger LOGGER = Logger.getLogger(Server.class.getName());
-    private final static int BUFFER_CAPACITY = 1024 * 1024;
-    private final static ThreadLocal<ByteBuffer> BUFFER = ThreadLocal
-            .withInitial(() -> ByteBuffer.allocate(BUFFER_CAPACITY));
+    public final static int BUFFER_CAPACITY = 1024 * 1024;
     public final static Map<SelectionKey, Session> CLIENT_SESSIONS = new HashMap<>();
 
     private final Selector selector;
@@ -87,9 +84,5 @@ public final class Server {
             key.cancel();
             Server.CLIENT_SESSIONS.remove(key, session);
         }
-    }
-
-    public static ByteBuffer getBuffer() {
-        return BUFFER.get();
     }
 }

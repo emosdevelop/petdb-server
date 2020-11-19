@@ -26,7 +26,7 @@ public final class Session {
     }
 
     public void read() throws IOException {
-        var buffer = Server.getBuffer();
+        var buffer = ByteBuffer.allocate(Server.BUFFER_CAPACITY);
         int bytesRead = this.channel.read(buffer);
         buffer.clear();
         if (bytesRead == END_OF_STREAM) {
@@ -34,7 +34,7 @@ public final class Session {
         }
         String request = new String(buffer.array()).trim();
         Optional<Query> query = this.parser.parse(request);
-        String response = query.map(q -> this.engine.execute(q, Server.getBuffer().capacity()))
+        String response = query.map(q -> this.engine.execute(q, Server.BUFFER_CAPACITY))
                 .orElseGet(() -> String.format("Error: input -> \"%s\" is not a valid syntax", request));
         this.channel.register(
                 this.key.selector(),
