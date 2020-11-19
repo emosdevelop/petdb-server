@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public final class Server {
 
     private final static Logger LOGGER = Logger.getLogger(Server.class.getName());
-    public final static int BUFFER_CAPACITY = 1024 * 1024;
+
     public final static Map<SelectionKey, Session> CLIENT_SESSIONS = new HashMap<>();
 
     private final Selector selector;
