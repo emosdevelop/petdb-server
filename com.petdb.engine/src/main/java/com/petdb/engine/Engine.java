@@ -2,6 +2,7 @@ package com.petdb.engine;
 
 
 import com.petdb.cache.Cache;
+import com.petdb.parser.query.Keyword;
 import com.petdb.parser.query.Query;
 import com.petdb.persistence.Persistence;
 import com.petdb.transaction.TransactionHandler;
@@ -22,7 +23,7 @@ public final class Engine {
                 return this.transactionHandler.rollback();
             case COMMIT:
                 var optional = this.transactionHandler.commit();
-                return optional.isPresent() ? this.cache.commit(optional.get()) : "Nothing to commit";
+                return optional.isPresent() ? this.cache.commit(optional.get()) : "Nothing to " + Keyword.COMMIT;
             case END:
                 return this.transactionHandler.end();
             case SET:
@@ -39,12 +40,12 @@ public final class Engine {
                         this.cache.delete(query.getKey());
             case COUNT:
                 if (this.transactionHandler.isActive()) {
-                    return String.format("COUNT: Transaction = %s", this.transactionHandler.count());
+                    return String.format(Keyword.COUNT + ": Transaction = %s", this.transactionHandler.count());
                 }
                 int cacheSize = this.cache.count();
                 int onDiskSize = (int) this.persistence.count();
                 int total = cacheSize + onDiskSize;
-                return String.format("COUNT: Cache = %d -> Disk = %d -> Total: %d", cacheSize, onDiskSize, total);
+                return String.format(Keyword.COUNT + ": Cache = %d -> Disk = %d -> Total: %d", cacheSize, onDiskSize, total);
             case EVICT:
                 if (this.transactionHandler.isActive()) return "Pending transaction[s]";
                 return persistence.persist(this.cache.getStore());
@@ -56,7 +57,7 @@ public final class Engine {
                 long end = System.nanoTime();
                 long elapsedTime = end - start;
                 long seconds = TimeUnit.SECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
-                return String.format("FLUSH: It took %dSECONDS", seconds);
+                return String.format(Keyword.FLUSH + ": It took %dSECONDS", seconds);
             default:
                 return "null";
         }

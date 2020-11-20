@@ -1,6 +1,7 @@
 package com.petdb.transaction;
 
 import com.petdb.parser.query.Key;
+import com.petdb.parser.query.Keyword;
 import com.petdb.parser.query.Value;
 
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ public class TransactionHandler {
         var startTimeStamp = LocalDateTime.now().format(DATE_TIME_FORMATTER);
         var transaction = new Transaction(startTimeStamp);
         this.stack.push(transaction);
-        return String.format("BEGIN: %s : %s", transaction.getUuid(), transaction.getTimestamp());
+        return String.format(Keyword.BEGIN + ": %s : %s", transaction.getUuid(), transaction.getTimestamp());
     }
 
     public String rollback() {
@@ -29,7 +30,7 @@ public class TransactionHandler {
         if (optional.isPresent()) {
             var transaction = optional.get();
             transaction.getMap().clear();
-            return String.format("ROLLBACK: %s", transaction.getUuid());
+            return String.format(Keyword.ROLLBACK + ": %s", transaction.getUuid());
         } else {
             return "No active transaction[s]";
         }
@@ -42,7 +43,7 @@ public class TransactionHandler {
     public String end() {
         if (this.peekOptional().isPresent()) {
             var transaction = this.stack.pop();
-            return String.format("END: %s", transaction.getUuid());
+            return String.format(Keyword.END + ": %s", transaction.getUuid());
         } else {
             return "No active transaction[s]";
         }
@@ -66,7 +67,7 @@ public class TransactionHandler {
     public String delete(Key key) {
         var map = this.getMapFromActiveTransaction();
         map.remove(key);
-        return "DELETED";
+        return Keyword.DELETE.toString();
     }
 
     public boolean isActive() {

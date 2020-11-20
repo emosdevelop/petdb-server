@@ -1,6 +1,7 @@
 package com.petdb.persistence;
 
 import com.petdb.parser.query.Key;
+import com.petdb.parser.query.Keyword;
 import com.petdb.parser.query.Value;
 
 import java.io.IOException;
@@ -44,7 +45,7 @@ public final class Persistence {
         long end = System.nanoTime();
         long elapsedTime = end - start;
         long seconds = TimeUnit.SECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
-        return String.format("EVICT: It took %dSECONDS to write %d key[s] and value[s]", seconds, cache.size());
+        return String.format(Keyword.EVICT + ": It took %dSECONDS to write %d key[s] and value[s]", seconds, cache.size());
     }
 
     private void write(Path file, Value value) throws IOException {

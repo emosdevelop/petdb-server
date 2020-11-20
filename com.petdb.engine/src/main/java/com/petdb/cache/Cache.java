@@ -1,6 +1,7 @@
 package com.petdb.cache;
 
 import com.petdb.parser.query.Key;
+import com.petdb.parser.query.Keyword;
 import com.petdb.parser.query.Value;
 import com.petdb.transaction.Transaction;
 
@@ -31,12 +32,12 @@ public final class Cache {
 
     public String delete(Key key) {
         Cache.STORE.remove(key);
-        return "DELETED";
+        return Keyword.DELETE.toString();
     }
 
     public String commit(Transaction transaction) {
         Cache.STORE.putAll(transaction.getMap());
-        return String.format("COMMIT: %s", transaction.getUuid());
+        return String.format(Keyword.COMMIT + ": %s", transaction.getUuid());
     }
 
     public int count() {
