@@ -12,14 +12,14 @@ import java.util.Optional;
 
 import static com.petdb.util.EngineUtil.DATE_TIME_FORMATTER;
 
-public class TransactionHandler {
+public final class TransactionHandler {
 
-    private final Deque<Transaction> stack = new ArrayDeque<>();
+    private final Deque<Transaction> transactions = new ArrayDeque<>();
 
     public String begin() {
         var startTimeStamp = LocalDateTime.now().format(DATE_TIME_FORMATTER);
         var transaction = new Transaction(startTimeStamp);
-        this.stack.push(transaction);
+        this.transactions.push(transaction);
         return String.format(Keyword.BEGIN + ": %s : %s", transaction.getUuid(), transaction.getTimestamp());
     }
 
@@ -35,12 +35,12 @@ public class TransactionHandler {
     }
 
     public Optional<Transaction> commit() {
-        return this.peekOptional().isPresent() ? Optional.of(this.stack.pop()) : Optional.empty();
+        return this.peekOptional().isPresent() ? Optional.of(this.transactions.pop()) : Optional.empty();
     }
 
     public String end() {
         if (this.peekOptional().isPresent()) {
-            var transaction = this.stack.pop();
+            var transaction = this.transactions.pop();
             return String.format(Keyword.END + ": %s", transaction.getUuid());
         } else {
             return "No active transaction[s]";
@@ -69,15 +69,15 @@ public class TransactionHandler {
     }
 
     public boolean isActive() {
-        return !this.stack.isEmpty();
+        return !this.transactions.isEmpty();
     }
 
     private Optional<Transaction> peekOptional() {
-        return Optional.ofNullable(this.stack.peek());
+        return Optional.ofNullable(this.transactions.peek());
     }
 
     private Map<Key, Value> getMapFromActiveTransaction() {
-        return isActive() ? this.stack.peek().getMap() : null;
+        return isActive() ? this.transactions.peek().getMap() : null;
     }
 
     public String count() {
