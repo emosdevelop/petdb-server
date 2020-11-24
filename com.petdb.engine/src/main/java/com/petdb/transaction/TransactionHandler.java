@@ -5,16 +5,14 @@ import com.petdb.parser.query.Keyword;
 import com.petdb.parser.query.Value;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Map;
+import java.util.Optional;
+
+import static com.petdb.util.EngineUtil.DATE_TIME_FORMATTER;
 
 public class TransactionHandler {
-
-    private final static DateTimeFormatter DATE_TIME_FORMATTER = new DateTimeFormatterBuilder()
-            .parseCaseInsensitive()
-            .append(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-            .toFormatter(Locale.ENGLISH);
 
     private final Deque<Transaction> stack = new ArrayDeque<>();
 

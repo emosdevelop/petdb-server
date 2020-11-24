@@ -58,7 +58,7 @@ public final class Engine {
 
     private String dump() {
         long start = System.nanoTime();
-        this.fileHandler.dump(Cache.getSTORE());
+        this.fileHandler.dumpJSON(Cache.getSTORE());
         long end = System.nanoTime();
         long elapsedTime = end - start;
         long seconds = TimeUnit.SECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);

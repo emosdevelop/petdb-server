@@ -18,6 +18,7 @@ public final class Driver {
             } else {
                 port = Integer.parseInt(args[0]);
             }
+            LOGGER.info(String.format("work dir = %s", System.getProperty("user.dir")));
             LOGGER.info(String.format("Port = %d", port));
             new Server(port).start();
         } catch (IOException e) {
