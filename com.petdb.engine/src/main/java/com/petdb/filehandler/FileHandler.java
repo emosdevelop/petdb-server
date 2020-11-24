@@ -1,8 +1,8 @@
 package com.petdb.filehandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.petdb.parser.query.Key;
-import com.petdb.parser.query.Value;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.petdb.cache.Cache;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -10,7 +10,6 @@ import java.nio.channels.AsynchronousFileChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,22 +22,40 @@ public final class FileHandler {
 
     private static final ExecutorService THREAD_POOL = Executors.newCachedThreadPool();
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    public static void dump(Extension extension) {
+        switch (extension) {
+            case JSON:
+                FileHandler.write(extension, new ObjectMapper());
+                return;
+            case XML:
+                FileHandler.write(extension, new XmlMapper());
+                return;
+            default:
+        }
+    }
 
-    //TODO XML??
-    public void dumpJSON(Map<Key, Value> store) {
-        String fileName = "PetDB-dump" + LocalDateTime.now().format(DATE_FORMATTER) + ".json";
+    private static void write(Extension extension, ObjectMapper mapper) {
+        String fileName = FileHandler.buildFileName(extension.getExtension());
         Path file = Paths.get(USER_DIR).resolve(fileName);
         try (var channel = AsynchronousFileChannel.open(
                 file, Set.of(WRITE, TRUNCATE_EXISTING, CREATE), THREAD_POOL
         )) {
-            String json = this.mapper.writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(store);
-            var buffer = ByteBuffer.wrap(json.getBytes());
+            String dataAsString = mapper.writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(Cache.getSTORE());
+            var buffer = ByteBuffer.wrap(dataAsString.getBytes());
             var operation = channel.write(buffer, 0);
             while (!operation.isDone()) ;
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static String buildFileName(String extension) {
+        var builder = new StringBuilder();
+        builder.append("PetDB_dump");
+        builder.append(LocalDateTime.now().format(DATE_FORMATTER));
+        builder.append(".");
+        builder.append(extension);
+        return builder.toString();
     }
 }
