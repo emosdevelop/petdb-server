@@ -80,8 +80,8 @@ public final class Server {
     private void closeSession(SelectionKey key, Session session) {
         try {
             key.channel().close();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             key.cancel();
             Server.CLIENT_SESSIONS.remove(key, session);
