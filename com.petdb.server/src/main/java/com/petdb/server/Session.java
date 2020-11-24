@@ -17,6 +17,7 @@ public final class Session {
 
     private final SelectionKey key;
     private final SocketChannel channel;
+    private final ByteBuffer readBuffer = ByteBuffer.allocate(1024 * 1024);
     private final Parser parser = new Parser();
     private final Engine engine = new Engine();
 
@@ -26,15 +27,14 @@ public final class Session {
     }
 
     public void read() throws IOException {
-        var buffer = ByteBuffer.allocate(1024 * 1024);
-        int bytesRead = this.channel.read(buffer);
-        buffer.clear();
+        this.readBuffer.clear();
+        int bytesRead = this.channel.read(this.readBuffer);
         if (bytesRead == END_OF_STREAM) {
             throw new IOException();
         }
-        String request = new String(buffer.array()).trim();
+        String request = new String(this.readBuffer.array(), 0, bytesRead, StandardCharsets.UTF_8);
         Optional<Query> query = this.parser.parse(request);
-        String response = query.map(q -> this.engine.execute(q, buffer.capacity()))
+        String response = query.map(q -> this.engine.execute(q, this.readBuffer.capacity()))
                 .orElseGet(() -> String.format("Error: input -> \"%s\" is not a valid syntax", request));
         this.channel.register(
                 this.key.selector(),
