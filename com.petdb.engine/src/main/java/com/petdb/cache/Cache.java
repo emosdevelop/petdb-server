@@ -13,10 +13,6 @@ public final class Cache {
 
     private final static Map<Key, Value> STORE = new HashMap<>();
 
-    public Cache() {
-        //TODO load from disk
-    }
-
     public String set(Key key, Value value) {
         Cache.STORE.put(key, value);
         return "OK";

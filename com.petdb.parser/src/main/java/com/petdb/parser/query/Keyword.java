@@ -9,6 +9,6 @@ public enum Keyword {
     GET,
     DELETE,
     COUNT,
-    EVICT,
+    DUMP,
     FLUSH;
 }
