@@ -1,8 +1,10 @@
 package com.petdb.parser.query;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public final class Query {
     private final Keyword keyword;
     private final Key key;

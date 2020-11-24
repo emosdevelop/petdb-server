@@ -2,7 +2,6 @@ package com.petdb.parser;
 
 
 import com.petdb.parser.query.Key;
-import com.petdb.parser.query.Keyword;
 import com.petdb.parser.query.Query;
 import com.petdb.parser.query.Value;
 import com.petdb.parser.tokenizer.Token;
@@ -29,23 +28,21 @@ public final class Parser {
     }
 
     private Query build(List<Token> tokens) {
-        Keyword keyword = null;
-        Key key = null;
-        Value value = null;
+        var queryBuilder = Query.builder();
         for (Token token : tokens) {
             switch (token.getIdentifier()) {
                 case Token.KEYWORD:
-                    keyword = valueOf(token.getSequence().toUpperCase());
+                    queryBuilder.keyword(valueOf(token.getSequence().toUpperCase()));
                     break;
                 case Token.KEY:
-                    key = new Key(token.getSequence());
+                    queryBuilder.key(new Key(token.getSequence()));
                     break;
                 case Token.VALUE:
-                    value = new Value(token.getSequence());
+                    queryBuilder.value(new Value(token.getSequence()));
                     break;
             }
         }
-        return new Query(keyword, key, value);
+        return queryBuilder.build();
     }
 
     private boolean validate(Query query) {
