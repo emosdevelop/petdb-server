@@ -42,10 +42,6 @@ public final class Cache {
         return Cache.STORE.size();
     }
 
-    public Map<Key, Value> getStore() {
-        return Collections.unmodifiableMap(Cache.STORE);
-    }
-
     public void flush() {
         Cache.STORE.clear();
     }
