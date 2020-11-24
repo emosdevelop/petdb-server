@@ -11,6 +11,8 @@ import java.util.Map;
 
 public final class Cache {
 
+    //TODO key expiration time?
+
     private final static Map<Key, Value> STORE = new HashMap<>();
 
     public String set(Key key, Value value) {
