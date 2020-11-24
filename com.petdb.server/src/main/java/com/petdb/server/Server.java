@@ -8,6 +8,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public final class Server {
@@ -41,7 +42,8 @@ public final class Server {
                 else if (key.isWritable()) this.handleWrite(key);
             }
             try {
-                Thread.sleep(ThreadLocalRandom.current().nextInt(100, 500));
+                TimeUnit.MILLISECONDS.sleep
+                        (ThreadLocalRandom.current().nextInt(100, 500));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
