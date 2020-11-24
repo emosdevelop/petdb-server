@@ -46,6 +46,7 @@ public final class Engine {
                 return String.valueOf(cacheSize);
             case DUMP:
                 if (this.transactionHandler.isActive()) return "Pending transaction[s]";
+
                 return null;
             case FLUSH:
                 if (this.transactionHandler.isActive()) return "Pending transaction[s]";
