@@ -9,4 +9,9 @@ public final class Key {
     public Key(String data) {
         this.data = data;
     }
+
+    @Override
+    public String toString() {
+        return this.data;
+    }
 }
