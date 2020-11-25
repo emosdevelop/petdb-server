@@ -12,14 +12,7 @@ public final class Driver {
     private final static Logger LOGGER = Logger.getLogger(Driver.class.getName());
 
     public static void main(String[] args) {
-        try (var reader = new BufferedReader(
-                new InputStreamReader(
-                        Driver.class.getResourceAsStream("/petdb-banner.txt")
-                ))) {
-            reader.lines().forEach(System.out::println);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        printBanner();
         try {
             int port = 0;
             if (args.length != 1) {
@@ -31,6 +24,17 @@ public final class Driver {
             LOGGER.info(String.format("Working directory = %s", System.getProperty("user.dir")));
             LOGGER.info(String.format("Port = %d", port));
             new Server(port).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void printBanner() {
+        try (var reader = new BufferedReader(
+                new InputStreamReader(
+                        Driver.class.getResourceAsStream("/petdb-banner.txt")
+                ))) {
+            reader.lines().forEach(System.out::println);
         } catch (IOException e) {
             e.printStackTrace();
         }
