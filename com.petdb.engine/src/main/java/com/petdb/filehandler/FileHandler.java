@@ -22,20 +22,20 @@ public final class FileHandler {
 
     private static final ExecutorService THREAD_POOL = Executors.newCachedThreadPool();
 
-    public static void dump(Extension extension) {
+    public void dump(Extension extension) {
         switch (extension) {
             case JSON:
-                FileHandler.write(extension, new ObjectMapper());
+                this.writeDump(extension, new ObjectMapper());
                 return;
             case XML:
-                FileHandler.write(extension, new XmlMapper());
+                this.writeDump(extension, new XmlMapper());
                 return;
             default:
         }
     }
 
-    private static void write(Extension extension, ObjectMapper mapper) {
-        String fileName = FileHandler.buildFileName(extension.getExtension());
+    private void writeDump(Extension extension, ObjectMapper mapper) {
+        String fileName = this.buildFileName(extension.getExtension());
         Path file = Paths.get(USER_DIR).resolve(fileName);
         try (var channel = AsynchronousFileChannel.open(
                 file, Set.of(WRITE, TRUNCATE_EXISTING, CREATE), THREAD_POOL
@@ -50,7 +50,7 @@ public final class FileHandler {
         }
     }
 
-    private static String buildFileName(String extension) {
+    private String buildFileName(String extension) {
         var builder = new StringBuilder();
         builder.append("PetDB_dump");
         builder.append(LocalDateTime.now().format(DATE_FORMATTER));

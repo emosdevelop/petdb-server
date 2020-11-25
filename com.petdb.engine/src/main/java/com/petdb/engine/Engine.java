@@ -9,12 +9,13 @@ import com.petdb.transaction.TransactionHandler;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.petdb.filehandler.Extension.XML;
+import static com.petdb.filehandler.Extension.JSON;
 
 public final class Engine {
 
     private final TransactionHandler transactionHandler = new TransactionHandler();
     private final Cache cache = new Cache();
+    private final FileHandler fileHandler = new FileHandler();
 
     public String execute(Query query, int bufferCapacity) {
         switch (query.getKeyword()) {
@@ -60,7 +61,7 @@ public final class Engine {
     private String dump() {
         long start = System.nanoTime();
         // FIXME JSON & XML param for DUMP keyword
-        FileHandler.dump(XML);
+        this.fileHandler.dump(JSON);
         long end = System.nanoTime();
         long elapsedTime = end - start;
         long seconds = TimeUnit.SECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
