@@ -3,13 +3,13 @@ package com.petdb.filehandler;
 public enum Extension {
     JSON("json"), XML("xml");
 
-    private final String extension;
+    private final String value;
 
-    Extension(String extension) {
-        this.extension = extension;
+    Extension(String value) {
+        this.value = value;
     }
 
-    public String getExtension() {
-        return extension;
+    public String getValue() {
+        return value;
     }
 }

@@ -48,7 +48,6 @@ public final class Parser {
     private boolean validate(Query query) {
         switch (query.getKeyword()) {
             case COUNT:
-            case DUMP:
             case FLUSH:
             case BEGIN:
             case ROLLBACK:
@@ -59,6 +58,7 @@ public final class Parser {
                 return query.hasKey() && query.hasValue();
             case DELETE:
             case GET:
+            case DUMP:
                 return query.hasKey() && !query.hasValue();
             default:
                 return false;

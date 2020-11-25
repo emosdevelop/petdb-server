@@ -18,7 +18,7 @@ class ParserTest {
             "get myKey",
             "delete mykey",
             "count",
-            "dump",
+            "dump json",
             "fluSh",
     };
 

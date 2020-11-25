@@ -35,7 +35,7 @@ public final class FileHandler {
     }
 
     private void writeDump(Extension extension, ObjectMapper mapper) {
-        String fileName = this.buildFileName(extension.getExtension());
+        String fileName = this.buildFileName(extension.getValue());
         Path file = Paths.get(USER_DIR).resolve(fileName);
         try (var channel = AsynchronousFileChannel.open(
                 file, Set.of(WRITE, TRUNCATE_EXISTING, CREATE), THREAD_POOL

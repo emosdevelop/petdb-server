@@ -2,6 +2,7 @@ package com.petdb.engine;
 
 
 import com.petdb.cache.Cache;
+import com.petdb.filehandler.Extension;
 import com.petdb.filehandler.FileHandler;
 import com.petdb.parser.query.Keyword;
 import com.petdb.parser.query.Query;
@@ -10,6 +11,7 @@ import com.petdb.transaction.TransactionHandler;
 import java.util.concurrent.TimeUnit;
 
 import static com.petdb.filehandler.Extension.JSON;
+import static com.petdb.filehandler.Extension.XML;
 
 public final class Engine {
 
@@ -49,7 +51,12 @@ public final class Engine {
                 return String.valueOf(this.cache.count());
             case DUMP:
                 if (this.transactionHandler.isActive()) return "Pending transaction[s]";
-                return this.dump();
+                var data = query.getKey().getData();
+                if (!(data.equalsIgnoreCase(JSON.getValue()) ||
+                        data.equalsIgnoreCase(XML.getValue()))) {
+                    return "XML or JSON";
+                }
+                return this.dump(Extension.valueOf(data.toUpperCase()));
             case FLUSH:
                 if (this.transactionHandler.isActive()) return "Pending transaction[s]";
                 return this.flush();
@@ -58,10 +65,9 @@ public final class Engine {
         }
     }
 
-    private String dump() {
+    private String dump(Extension extension) {
         long start = System.nanoTime();
-        // FIXME JSON & XML param for DUMP keyword
-        this.fileHandler.dump(JSON);
+        this.fileHandler.dump(extension);
         long end = System.nanoTime();
         long elapsedTime = end - start;
         long seconds = TimeUnit.SECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
