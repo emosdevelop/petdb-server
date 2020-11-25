@@ -8,7 +8,6 @@ import com.petdb.parser.query.Query;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -25,10 +24,10 @@ public final class SessionHandler {
     private final static Engine ENGINE = new Engine();
     private final static ByteBuffer READ_BUFFER = ByteBuffer.allocate(1024 * 1024);
 
-    public void accept(SelectionKey key, Selector selector) throws IOException {
+    public void accept(SelectionKey key) throws IOException {
         var client = ((ServerSocketChannel) key.channel()).accept();
         client.configureBlocking(false);
-        var clientKey = client.register(selector, SelectionKey.OP_READ);
+        var clientKey = client.register(key.selector(), SelectionKey.OP_READ);
         CLIENT_SESSIONS.put(clientKey, new Session(clientKey));
         LOGGER.info(String.format("New client connected : %s", client.getRemoteAddress()));
         //TODO Timeout???

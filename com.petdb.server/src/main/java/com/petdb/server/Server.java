@@ -58,7 +58,7 @@ public final class Server {
 
     private void handleAccept(SelectionKey key) {
         try {
-            this.sessionHandler.accept(key, this.selector);
+            this.sessionHandler.accept(key);
         } catch (IOException e) {
             e.printStackTrace();
             this.sessionHandler.close(key);
