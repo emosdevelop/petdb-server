@@ -18,14 +18,14 @@ public final class Session {
     }
 
     public SelectionKey getKey() {
-        return key;
+        return this.key;
     }
 
     public SocketChannel getChannel() {
-        return channel;
+        return this.channel;
     }
 
     public SocketAddress getAddress() {
-        return address;
+        return this.address;
     }
 }
