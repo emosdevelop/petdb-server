@@ -17,7 +17,7 @@ public final class Driver {
     }
 
     public static void main(String[] args) {
-        int port = getPort(args);
+        int port = Driver.getPort(args);
         try {
             new Server(port).start();
         } catch (IOException e) {
