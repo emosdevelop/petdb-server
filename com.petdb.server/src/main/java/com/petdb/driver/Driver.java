@@ -12,8 +12,11 @@ public final class Driver {
     private final static Logger LOGGER = Logger.getLogger(Driver.class.getName());
     private final static int DEFAULT_PORT = 12542;
 
-    public static void main(String[] args) {
+    static {
         printBanner();
+    }
+
+    public static void main(String[] args) {
         int port = getPort(args);
         try {
             new Server(port).start();
