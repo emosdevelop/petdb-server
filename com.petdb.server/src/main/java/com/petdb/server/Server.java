@@ -1,12 +1,12 @@
 package com.petdb.server;
 
+import com.petdb.exception.ClientConnectionClosedException;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -15,12 +15,10 @@ public final class Server {
 
     private final static Logger LOGGER = Logger.getLogger(Server.class.getName());
 
-    public final static Map<SelectionKey, Session> CLIENT_SESSIONS = new HashMap<>();
-
-    private final Selector selector;
+    private final Selector selector = Selector.open();
+    private final SessionHandler sessionHandler = new SessionHandler();
 
     public Server(int port) throws IOException {
-        this.selector = Selector.open();
         var server = ServerSocketChannel.open();
         server.configureBlocking(false);
         server.register(this.selector, SelectionKey.OP_ACCEPT);
@@ -36,10 +34,18 @@ public final class Server {
             while (keys.hasNext()) {
                 var key = keys.next();
                 keys.remove();
-                if (!key.isValid()) continue;
-                if (key.isAcceptable()) this.handleAccept(key);
-                else if (key.isReadable()) this.handleRead(key);
-                else if (key.isWritable()) this.handleWrite(key);
+                if (!key.isValid()) {
+                    continue;
+                }
+                if (key.isAcceptable()) {
+                    this.handleAccept(key);
+                } else if (key.isReadable()) {
+                    this.handleRead(key);
+                } else if (key.isWritable()) {
+                    this.handleWrite(key);
+                } else if (key.isConnectable()) {
+                    // Remote connection
+                }
             }
             try {
                 TimeUnit.MILLISECONDS.sleep
@@ -50,41 +56,32 @@ public final class Server {
         }
     }
 
-    private void handleAccept(SelectionKey key) throws IOException {
-        var client = ((ServerSocketChannel) key.channel()).accept();
-        client.configureBlocking(false);
-        var clientKey = client.register(this.selector, SelectionKey.OP_READ);
-        Server.CLIENT_SESSIONS.put(clientKey, new Session(clientKey));
-        LOGGER.info(String.format("New client connected : %s", client.getRemoteAddress()));
-        //TODO Timeout???
+    private void handleAccept(SelectionKey key) {
+        try {
+            this.sessionHandler.accept(key, this.selector);
+        } catch (IOException e) {
+            e.printStackTrace();
+            this.sessionHandler.close(key);
+        }
     }
 
     private void handleRead(SelectionKey key) {
-        var session = Server.CLIENT_SESSIONS.get(key);
         try {
-            session.read();
+            this.sessionHandler.read(key);
+        } catch (ClientConnectionClosedException e) {
+            this.sessionHandler.close(key);
         } catch (IOException e) {
-            this.closeSession(key, session);
+            e.printStackTrace();
+            this.sessionHandler.close(key);
         }
     }
 
     private void handleWrite(SelectionKey key) {
-        var session = Server.CLIENT_SESSIONS.get(key);
         try {
-            session.write();
-        } catch (IOException e) {
-            this.closeSession(key, session);
-        }
-    }
-
-    private void closeSession(SelectionKey key, Session session) {
-        try {
-            key.channel().close();
+            this.sessionHandler.write(key);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            key.cancel();
-            Server.CLIENT_SESSIONS.remove(key, session);
+            this.sessionHandler.close(key);
         }
     }
 }
