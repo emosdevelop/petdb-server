@@ -35,7 +35,7 @@ public final class FileHandler {
     }
 
     private void writeDump(Extension extension, ObjectMapper mapper) {
-        String fileName = this.buildFileName(extension.getValue());
+        String fileName = this.buildDumpFile(extension.getValue());
         Path file = Paths.get(USER_DIR).resolve(fileName);
         try (var channel = AsynchronousFileChannel.open(
                 file, Set.of(WRITE, TRUNCATE_EXISTING, CREATE), THREAD_POOL
@@ -50,7 +50,7 @@ public final class FileHandler {
         }
     }
 
-    private String buildFileName(String extension) {
+    private String buildDumpFile(String extension) {
         var builder = new StringBuilder();
         builder.append("PetDB_dump");
         builder.append(LocalDateTime.now().format(DATE_FORMATTER));
