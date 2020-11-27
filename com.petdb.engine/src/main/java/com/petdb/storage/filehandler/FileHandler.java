@@ -1,8 +1,9 @@
-package com.petdb.filehandler;
+package com.petdb.storage.filehandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.petdb.cache.Cache;
+import com.petdb.util.Extension;
+import com.petdb.storage.StorageHandler;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -41,7 +42,7 @@ public final class FileHandler {
                 file, Set.of(WRITE, TRUNCATE_EXISTING, CREATE), THREAD_POOL
         )) {
             String dataAsString = mapper.writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(Cache.getSTORE());
+                    .writeValueAsString(StorageHandler.getSTORE());
             var buffer = ByteBuffer.wrap(dataAsString.getBytes());
             var operation = channel.write(buffer, 0);
             while (!operation.isDone()) ;

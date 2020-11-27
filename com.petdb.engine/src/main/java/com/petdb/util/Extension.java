@@ -1,4 +1,4 @@
-package com.petdb.filehandler;
+package com.petdb.util;
 
 public enum Extension {
     JSON("json"), XML("xml");
