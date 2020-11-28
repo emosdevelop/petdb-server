@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class StorageHandler {
 
     private final static Map<String, String> STORE = new HashMap<>();
-    private final static int MAX_MODIFIED = 5;
+    private final static int MAX_MODIFIED = 100;
 
     private final FileHandler fileHandler = new FileHandler();
     private final AtomicInteger count = new AtomicInteger(0);
