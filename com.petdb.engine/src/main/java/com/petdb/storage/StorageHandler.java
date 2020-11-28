@@ -1,12 +1,11 @@
 package com.petdb.storage;
 
-import com.petdb.parser.query.Key;
 import com.petdb.parser.query.Keyword;
-import com.petdb.parser.query.Value;
 import com.petdb.storage.filehandler.FileHandler;
 import com.petdb.transaction.Transaction;
 import com.petdb.util.Extension;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,27 +13,35 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public final class StorageHandler {
 
-    private final static Map<Key, Value> STORE = new HashMap<>();
-    private final static int MAX_MODIFIED = 100;
+    private final static Map<String, String> STORE = new HashMap<>();
+    private final static int MAX_MODIFIED = 5;
 
     private final FileHandler fileHandler = new FileHandler();
     private final AtomicInteger count = new AtomicInteger(0);
 
-    public String set(Key key, Value value) {
+    public StorageHandler() {
+        try {
+            StorageHandler.STORE.putAll(this.fileHandler.loadFromDiskIfExists());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String set(String key, String value) {
         StorageHandler.STORE.put(key, value);
         this.persistIfCountEquals();
         return "OK";
     }
 
-    public String get(Key key) {
+    public String get(String key) {
         var value = StorageHandler.STORE.get(key);
         if (value == null) {
-            return String.format("Key = %s, not set", key.getData());
+            return String.format("Key = %s, not set", key);
         }
-        return value.getData();
+        return value;
     }
 
-    public String delete(Key key) {
+    public String delete(String key) {
         StorageHandler.STORE.remove(key);
         return Keyword.DELETE.toString();
     }
@@ -63,7 +70,7 @@ public final class StorageHandler {
         }
     }
 
-    public static Map<Key, Value> getSTORE() {
+    public static Map<String, String> getSTORE() {
         return Collections.unmodifiableMap(StorageHandler.STORE);
     }
 }

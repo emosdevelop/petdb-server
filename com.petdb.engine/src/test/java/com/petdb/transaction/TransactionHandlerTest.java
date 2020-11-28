@@ -1,7 +1,5 @@
 package com.petdb.transaction;
 
-import com.petdb.parser.query.Key;
-import com.petdb.parser.query.Value;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,8 +11,8 @@ class TransactionHandlerTest {
     @Test
     void rollback() {
         transactionHandler.begin();
-        transactionHandler.set(new Key("key"), new Value("value"));
-        transactionHandler.set(new Key("key1"), new Value("value1"));
+        transactionHandler.set("key", "value");
+        transactionHandler.set("key1", "value1");
         assertEquals(2, Integer.parseInt(transactionHandler.count()));
         transactionHandler.rollback();
         assertEquals(0, Integer.parseInt(transactionHandler.count()));
@@ -24,8 +22,8 @@ class TransactionHandlerTest {
     @Test
     void commit() {
         transactionHandler.begin();
-        transactionHandler.set(new Key("key"), new Value("value"));
-        transactionHandler.set(new Key("key1"), new Value("value1"));
+        transactionHandler.set("key", "value");
+        transactionHandler.set("key1", "value1");
         var optional = transactionHandler.commit();
         var transaction = optional.get();
         assertEquals(2, transaction.getMap().size());
@@ -34,8 +32,8 @@ class TransactionHandlerTest {
     @Test
     void testChildTransaction() {
         transactionHandler.begin();
-        transactionHandler.set(new Key("key"), new Value("value"));
-        transactionHandler.set(new Key("key1"), new Value("value1"));
+        transactionHandler.set("key", "value");
+        transactionHandler.set("key1", "value1");
         transactionHandler.begin();
         assertEquals(0, Integer.parseInt(transactionHandler.count()));
         transactionHandler.end();

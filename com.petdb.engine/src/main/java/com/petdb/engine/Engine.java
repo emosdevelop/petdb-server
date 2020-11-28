@@ -49,7 +49,7 @@ public final class Engine {
                 return String.valueOf(this.storageHandler.count());
             case DUMP:
                 if (this.transactionHandler.isActive()) return "Pending transaction[s]";
-                var data = query.getKey().getData();
+                var data = query.getKey();
                 if (!(data.equalsIgnoreCase(JSON.getValue()) ||
                         data.equalsIgnoreCase(XML.getValue()))) {
                     return "XML or JSON";

@@ -1,9 +1,7 @@
 package com.petdb.parser;
 
 
-import com.petdb.parser.query.Key;
 import com.petdb.parser.query.Query;
-import com.petdb.parser.query.Value;
 import com.petdb.parser.tokenizer.Token;
 import com.petdb.parser.tokenizer.Tokenizer;
 
@@ -35,10 +33,10 @@ public final class Parser {
                     queryBuilder.keyword(valueOf(token.getSequence().toUpperCase()));
                     break;
                 case Token.KEY:
-                    queryBuilder.key(new Key(token.getSequence()));
+                    queryBuilder.key(token.getSequence());
                     break;
                 case Token.VALUE:
-                    queryBuilder.value(new Value(token.getSequence()));
+                    queryBuilder.value(token.getSequence());
                     break;
             }
         }

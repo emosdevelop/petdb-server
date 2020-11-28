@@ -1,5 +1,6 @@
 package com.petdb.storage.filehandler;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.petdb.storage.StorageHandler;
@@ -8,9 +9,13 @@ import com.petdb.util.Extension;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -24,10 +29,10 @@ public final class FileHandler {
 
     private static final ExecutorService THREAD_POOL = Executors.newCachedThreadPool();
     private static final Path USER_DIR_AS_PATH = Paths.get(USER_DIR);
+    private static final String PERSISTENCE_FILE_NAME = "data.json";
 
     public void persist() {
-        String fileName = "data.json";
-        Path file = USER_DIR_AS_PATH.resolve(fileName);
+        Path file = USER_DIR_AS_PATH.resolve(PERSISTENCE_FILE_NAME);
         try (var channel = AsynchronousFileChannel.open(
                 file, Set.of(WRITE, CREATE), THREAD_POOL
         )) {
@@ -76,5 +81,16 @@ public final class FileHandler {
         builder.append(".");
         builder.append(extension);
         return builder.toString();
+    }
+
+    public Map<String, String> loadFromDiskIfExists() throws IOException {
+        if (Files.exists(USER_DIR_AS_PATH.resolve(PERSISTENCE_FILE_NAME))) {
+            TypeReference<HashMap<String, String>> typeRef
+                    = new TypeReference<>() {
+            };
+            var json = Files.readString(USER_DIR_AS_PATH.resolve(PERSISTENCE_FILE_NAME));
+            return new ObjectMapper().readValue(json, typeRef);
+        }
+        return Collections.emptyMap();
     }
 }

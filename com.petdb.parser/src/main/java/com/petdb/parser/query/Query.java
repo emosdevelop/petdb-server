@@ -7,18 +7,18 @@ import lombok.Data;
 @Builder
 public final class Query {
     private final Keyword keyword;
-    private final Key key;
-    private final Value value;
+    private final String key;
+    private final String value;
 
     public boolean hasKeyword() {
         return this.keyword != null;
     }
 
     public boolean hasKey() {
-        return this.key != null && !this.key.getData().isEmpty();
+        return this.key != null && !this.key.isEmpty();
     }
 
     public boolean hasValue() {
-        return this.value != null && !this.value.getData().isEmpty();
+        return this.value != null && !this.value.isEmpty();
     }
 }

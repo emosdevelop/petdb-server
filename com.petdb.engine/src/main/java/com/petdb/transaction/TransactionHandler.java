@@ -1,8 +1,6 @@
 package com.petdb.transaction;
 
-import com.petdb.parser.query.Key;
 import com.petdb.parser.query.Keyword;
-import com.petdb.parser.query.Value;
 
 import java.time.LocalDateTime;
 import java.util.ArrayDeque;
@@ -47,22 +45,22 @@ public final class TransactionHandler {
         }
     }
 
-    public String set(Key key, Value value) {
+    public String set(String key, String value) {
         var map = this.getMapFromActiveTransaction();
         map.put(key, value);
         return "OK";
     }
 
-    public String get(Key key) {
+    public String get(String key) {
         var map = this.getMapFromActiveTransaction();
         var value = map.get(key);
         if (value == null) {
-            return String.format("Key = %s, not set", key.getData());
+            return String.format("Key = %s, not set", key);
         }
-        return value.getData();
+        return value;
     }
 
-    public String delete(Key key) {
+    public String delete(String key) {
         var map = this.getMapFromActiveTransaction();
         map.remove(key);
         return Keyword.DELETE.toString();
@@ -76,7 +74,7 @@ public final class TransactionHandler {
         return Optional.ofNullable(this.transactions.peek());
     }
 
-    private Map<Key, Value> getMapFromActiveTransaction() {
+    private Map<String, String> getMapFromActiveTransaction() {
         return isActive() ? this.transactions.peek().getMap() : null;
     }
 

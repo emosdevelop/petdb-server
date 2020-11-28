@@ -1,15 +1,12 @@
 package com.petdb.transaction;
 
-import com.petdb.parser.query.Key;
-import com.petdb.parser.query.Value;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class Transaction {
     private final UUID uuid = UUID.randomUUID();
-    private final Map<Key, Value> map = new HashMap<>();
+    private final Map<String, String> map = new HashMap<>();
     private final String timestamp;
 
     Transaction(String timestamp) {
@@ -20,7 +17,7 @@ public class Transaction {
         return this.uuid;
     }
 
-    public Map<Key, Value> getMap() {
+    public Map<String, String> getMap() {
         return this.map;
     }
 
