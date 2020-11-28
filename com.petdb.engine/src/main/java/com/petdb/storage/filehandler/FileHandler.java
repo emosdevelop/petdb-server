@@ -2,8 +2,8 @@ package com.petdb.storage.filehandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.petdb.util.Extension;
 import com.petdb.storage.StorageHandler;
+import com.petdb.util.Extension;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -22,6 +23,23 @@ import static java.nio.file.StandardOpenOption.*;
 public final class FileHandler {
 
     private static final ExecutorService THREAD_POOL = Executors.newCachedThreadPool();
+    private static final Path USER_DIR_AS_PATH = Paths.get(USER_DIR);
+
+    public void persist() {
+        String fileName = "data.json";
+        Path file = USER_DIR_AS_PATH.resolve(fileName);
+        try (var channel = AsynchronousFileChannel.open(
+                file, Set.of(WRITE, CREATE), THREAD_POOL
+        )) {
+            String dataAsString = new ObjectMapper().writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(StorageHandler.getSTORE());
+            var buffer = ByteBuffer.wrap(dataAsString.getBytes());
+            var operation = channel.write(buffer, 0);
+            operation.get();
+        } catch (IOException | InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void dump(Extension extension) {
         switch (extension) {
@@ -37,7 +55,7 @@ public final class FileHandler {
 
     private void writeDump(Extension extension, ObjectMapper mapper) {
         String fileName = this.buildDumpFile(extension.getValue());
-        Path file = Paths.get(USER_DIR).resolve(fileName);
+        Path file = USER_DIR_AS_PATH.resolve(fileName);
         try (var channel = AsynchronousFileChannel.open(
                 file, Set.of(WRITE, TRUNCATE_EXISTING, CREATE), THREAD_POOL
         )) {
@@ -45,8 +63,8 @@ public final class FileHandler {
                     .writeValueAsString(StorageHandler.getSTORE());
             var buffer = ByteBuffer.wrap(dataAsString.getBytes());
             var operation = channel.write(buffer, 0);
-            while (!operation.isDone()) ;
-        } catch (IOException e) {
+            operation.get();
+        } catch (IOException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }

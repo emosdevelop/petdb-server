@@ -1,26 +1,28 @@
 package com.petdb.storage;
 
-import com.petdb.storage.filehandler.FileHandler;
 import com.petdb.parser.query.Key;
 import com.petdb.parser.query.Keyword;
 import com.petdb.parser.query.Value;
+import com.petdb.storage.filehandler.FileHandler;
 import com.petdb.transaction.Transaction;
 import com.petdb.util.Extension;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public final class StorageHandler {
 
-    //TODO key expiration time?
-
     private final static Map<Key, Value> STORE = new HashMap<>();
+    private final static int MAX_MODIFIED = 100;
 
     private final FileHandler fileHandler = new FileHandler();
+    private final AtomicInteger count = new AtomicInteger(0);
 
     public String set(Key key, Value value) {
         StorageHandler.STORE.put(key, value);
+        this.persistIfCountEquals();
         return "OK";
     }
 
@@ -38,7 +40,7 @@ public final class StorageHandler {
     }
 
     public String commit(Transaction transaction) {
-        StorageHandler.STORE.putAll(transaction.getMap());
+        transaction.getMap().forEach(this::set);
         return String.format(Keyword.COMMIT + ": %s", transaction.getUuid());
     }
 
@@ -52,6 +54,13 @@ public final class StorageHandler {
 
     public void dump(Extension extension) {
         this.fileHandler.dump(extension);
+    }
+
+    private void persistIfCountEquals() {
+        int value = count.incrementAndGet();
+        if (value == MAX_MODIFIED) {
+            this.fileHandler.persist();
+        }
     }
 
     public static Map<Key, Value> getSTORE() {
