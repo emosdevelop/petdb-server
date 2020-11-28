@@ -17,7 +17,7 @@ public final class StorageHandler {
     private final static int MAX_MODIFIED = 100;
 
     private final FileHandler fileHandler = new FileHandler();
-    private final AtomicInteger count = new AtomicInteger(0);
+    private final AtomicInteger modifiedCount = new AtomicInteger(0);
 
     public StorageHandler() {
         try {
@@ -64,7 +64,7 @@ public final class StorageHandler {
     }
 
     private void persistIfCountEquals() {
-        int value = count.incrementAndGet();
+        int value = modifiedCount.incrementAndGet();
         if (value == MAX_MODIFIED) {
             this.fileHandler.persist();
         }
