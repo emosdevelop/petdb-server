@@ -36,9 +36,9 @@ public final class FileHandler {
         try (var channel = AsynchronousFileChannel.open(
                 file, Set.of(WRITE, CREATE), THREAD_POOL
         )) {
-            String dataAsString = new ObjectMapper().writerWithDefaultPrettyPrinter()
+            String mapAsJsonString = new ObjectMapper().writerWithDefaultPrettyPrinter()
                     .writeValueAsString(StorageHandler.getSTORE());
-            var buffer = ByteBuffer.wrap(dataAsString.getBytes());
+            var buffer = ByteBuffer.wrap(mapAsJsonString.getBytes());
             var operation = channel.write(buffer, 0);
             operation.get();
         } catch (IOException | InterruptedException | ExecutionException e) {
@@ -64,9 +64,9 @@ public final class FileHandler {
         try (var channel = AsynchronousFileChannel.open(
                 file, Set.of(WRITE, TRUNCATE_EXISTING, CREATE), THREAD_POOL
         )) {
-            String dataAsString = mapper.writerWithDefaultPrettyPrinter()
+            String mapAsJsonString = mapper.writerWithDefaultPrettyPrinter()
                     .writeValueAsString(StorageHandler.getSTORE());
-            var buffer = ByteBuffer.wrap(dataAsString.getBytes());
+            var buffer = ByteBuffer.wrap(mapAsJsonString.getBytes());
             var operation = channel.write(buffer, 0);
             operation.get();
         } catch (IOException | InterruptedException | ExecutionException e) {
@@ -88,8 +88,8 @@ public final class FileHandler {
             TypeReference<HashMap<String, String>> typeRef
                     = new TypeReference<>() {
             };
-            var json = Files.readString(USER_DIR_AS_PATH.resolve(PERSISTENCE_FILE_NAME));
-            return new ObjectMapper().readValue(json, typeRef);
+            var mapAsJsonString = Files.readString(USER_DIR_AS_PATH.resolve(PERSISTENCE_FILE_NAME));
+            return new ObjectMapper().readValue(mapAsJsonString, typeRef);
         }
         return Collections.emptyMap();
     }
