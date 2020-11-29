@@ -1,6 +1,6 @@
 package com.petdb.server;
 
-import com.petdb.exception.ClientConnectionClosedException;
+import com.petdb.exception.EndOfStreamException;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -68,7 +68,7 @@ public final class Server {
     private void handleRead(SelectionKey key) {
         try {
             this.sessionHandler.read(key);
-        } catch (ClientConnectionClosedException e) {
+        } catch (EndOfStreamException e) {
             this.sessionHandler.close(key);
         } catch (IOException e) {
             e.printStackTrace();

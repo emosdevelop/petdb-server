@@ -1,7 +1,7 @@
 package com.petdb.server;
 
 import com.petdb.engine.Engine;
-import com.petdb.exception.ClientConnectionClosedException;
+import com.petdb.exception.EndOfStreamException;
 import com.petdb.parser.Parser;
 import com.petdb.parser.query.Query;
 
@@ -38,7 +38,7 @@ public final class SessionHandler {
         READ_BUFFER.clear();
         int bytesRead = session.getChannel().read(READ_BUFFER);
         if (bytesRead == END_OF_STREAM) {
-            throw new ClientConnectionClosedException();
+            throw new EndOfStreamException();
         }
         String request = new String(
                 READ_BUFFER.array(), 0, bytesRead, StandardCharsets.UTF_8);
