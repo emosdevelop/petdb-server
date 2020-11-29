@@ -40,7 +40,7 @@ public final class Driver {
     private static void printBanner() {
         try (var reader = new BufferedReader(
                 new InputStreamReader(
-                        Driver.class.getResourceAsStream("/petdb-banner.txt")
+                        Driver.class.getResourceAsStream("/banner.txt")
                 ))) {
             reader.lines().forEach(System.out::println);
         } catch (IOException e) {
