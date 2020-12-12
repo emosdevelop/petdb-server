@@ -43,7 +43,7 @@ public final class SessionHandler {
         String request = new String(
                 READ_BUFFER.array(), 0, bytesRead, StandardCharsets.UTF_8);
         Optional<Query> query = PARSER.parse(request);
-        String response = query.map(q -> ENGINE.execute(q, READ_BUFFER.capacity()))
+        String response = query.map(ENGINE::execute)
                 .orElseGet(() -> String.format("Error: input -> \"%s\" is not a valid syntax", request));
         session.getChannel().register(
                 session.getKey().selector(),

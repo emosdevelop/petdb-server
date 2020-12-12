@@ -17,7 +17,7 @@ public final class Engine {
     private final TransactionHandler transactionHandler = new TransactionHandler();
     private final StorageHandler storageHandler = new StorageHandler();
 
-    public String execute(Query query, int bufferCapacity) {
+    public String execute(Query query) {
         switch (query.getKeyword()) {
             case BEGIN:
                 return this.transactionHandler.begin();
