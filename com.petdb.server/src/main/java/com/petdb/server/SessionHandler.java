@@ -1,6 +1,7 @@
 package com.petdb.server;
 
 import com.petdb.exception.EndOfStreamException;
+import com.petdb.parser.Parser;
 import com.petdb.parser.query.Query;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ public final class SessionHandler {
     private final static int END_OF_STREAM = -1;
     private final static Map<SelectionKey, Session> CLIENT_SESSIONS = new HashMap<>();
     private final static ByteBuffer READ_BUFFER = ByteBuffer.allocate(1024 * 1024);
+    private final static Parser PARSER = new Parser();
 
     public void accept(SelectionKey key) throws IOException {
         var client = ((ServerSocketChannel) key.channel()).accept();
@@ -38,7 +40,7 @@ public final class SessionHandler {
         }
         String request = new String(
                 READ_BUFFER.array(), 0, bytesRead, StandardCharsets.UTF_8);
-        Optional<Query> query = session.getParser().parse(request);
+        Optional<Query> query = PARSER.parse(request);
         String response = query.map(session.getEngine()::execute)
                 .orElseGet(() -> String.format("Error: input -> \"%s\" is not a valid syntax", request));
         session.getChannel().register(

@@ -15,7 +15,6 @@ public final class Session {
     private final SelectionKey key;
     private final SocketChannel channel;
     private final SocketAddress address;
-    private final Parser parser = new Parser();
     private final Engine engine = new Engine();
 
     public Session(SelectionKey key) throws IOException {
