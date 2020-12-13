@@ -15,9 +15,9 @@ public final class StorageHandler {
 
     private final static Map<String, String> STORE = new HashMap<>();
     private final static int MAX_MODIFIED = 100;
+    private final static AtomicInteger modifiedCount = new AtomicInteger(0);
 
     private final FileHandler fileHandler = new FileHandler();
-    private final AtomicInteger modifiedCount = new AtomicInteger(0);
 
     public StorageHandler() {
         try {
